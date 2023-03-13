@@ -1,41 +1,53 @@
 import { program } from 'commander';
+import fs from 'fs';
+import path from 'path';
+import {
+  searchDiff, showHelpInfo, stringBuilder, transferPathToFile, uniqueAndFlattenAndSortKeys,
+} from './utils.js';
 
 const version = '1.0.0';
 const description = 'Compares two configuration files and shows a difference.';
-
 const helpOption = { flag: '-h, --help', description: 'display help for command' };
 const formatOption = { flag: '-f, --format <type>', description: 'output format' };
-const firstArgument = { name: '<filepath1>', description: 'path to first file' };
-const secondArgument = { name: '<filepath1>', description: 'path to first file' };
+const firstArgument = { name: '<filepath1>', description: 'path to first file', defaultValue: '123' };
+const secondArgument = { name: '<filepath2>', description: 'path to first file', defaultValue: '123' };
 
-function startGenDiff() {
+function genDiff() {
   program
     .version(version)
     .description(description)
     .option(helpOption.flag, helpOption.description)
     .option(formatOption.flag, formatOption.description)
-    .argument(firstArgument.name, firstArgument.description)
-    .argument(secondArgument.name, secondArgument.description)
+    .argument(`[${firstArgument.name}]`, firstArgument.description, firstArgument.defaultValue)
+    .argument(`[${secondArgument.name}]`, secondArgument.description, secondArgument.defaultValue)
     .action((filepath1, filepath2) => {
-      console.log('filepath1:', filepath1);
-      console.log('filepath2:', filepath2);
+      if (program.opts().help) {
+        showHelpInfo(firstArgument, secondArgument, helpOption, formatOption);
+        return;
+      }
+
+      if (program.opts.version) {
+        console.log(program.version);
+        return;
+      }
+
+      if (!fs.existsSync(path.resolve(filepath1))) {
+        console.log(`${filepath1} not exists`);
+        return;
+      }
+
+      if (!fs.existsSync(path.resolve(filepath2))) {
+        console.log(`${filepath2} not exists`);
+        return;
+      }
+      const firstObject = transferPathToFile(filepath1);
+      const secondObject = transferPathToFile(filepath2);
+      const uniqueAndSortKeys = uniqueAndFlattenAndSortKeys([firstObject, secondObject]);
+      const diffs = stringBuilder(searchDiff(uniqueAndSortKeys, firstObject, secondObject));
+
+      console.log(diffs);
     })
     .parse();
-
-  const options = program.opts();
-  if ((Object.keys(options).length === 0)
-        || (options.help)) {
-    console.log(`Usage: gendiff [options] ${firstArgument.name} ${secondArgument.name}`);
-    console.log('');
-    console.log(program.description());
-    console.log('');
-    console.log('Options:');
-    console.log(`-V, --version        output the version number`);
-    console.log(`${helpOption.flag}           ${helpOption.description}`);
-    console.log(`${formatOption.flag}  ${formatOption.description}`);
-  } else if (options.version) {
-    console.log(program.version);
-  }
 }
 
-export default startGenDiff;
+export default genDiff;
