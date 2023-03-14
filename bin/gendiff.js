@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-import genDiff from '../src/gendiff.js';
+import startGenerateDiff from '../src/cli.js';
 
-genDiff();
+startGenerateDiff();

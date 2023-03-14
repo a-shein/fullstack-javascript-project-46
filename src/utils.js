@@ -1,20 +1,8 @@
-import { program } from 'commander';
 import fs from 'fs';
 import path from 'path';
 
-function showHelpInfo(firstArgument, secondArgument, helpOption, formatOption) {
-  console.log(`Usage: gendiff [options] ${firstArgument.name} ${secondArgument.name}`);
-  console.log('');
-  console.log(program.description());
-  console.log('');
-  console.log('Options:');
-  console.log('-V, --version        output the version number');
-  console.log(`${helpOption.flag}           ${helpOption.description}`);
-  console.log(`${formatOption.flag}  ${formatOption.description}`);
-}
-
-function transferPathToFile(rout) {
-  return JSON.parse(fs.readFileSync(path.resolve(rout)));
+function transferPathToFile(filepath) {
+  return JSON.parse(fs.readFileSync(path.resolve(process.cwd(), filepath)));
 }
 
 function uniqueAndFlattenAndSortKeys(objects) {
@@ -65,5 +53,5 @@ function stringBuilder(array) {
 }
 
 export {
-  showHelpInfo, stringBuilder, transferPathToFile, uniqueAndFlattenAndSortKeys, searchDiff,
+  stringBuilder, transferPathToFile, uniqueAndFlattenAndSortKeys, searchDiff,
 };
