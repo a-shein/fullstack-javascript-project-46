@@ -28,7 +28,7 @@ jobs:
         cache: 'npm'
 
     - name: Setup
-      run: make install, make link
+      run: make install
 
     - name: Link
       run: make link
