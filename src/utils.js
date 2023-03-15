@@ -2,6 +2,10 @@ import fs from 'fs';
 import path from 'path';
 
 function transferPathToFile(filepath) {
+  if (!fs.existsSync(path.resolve(process.cwd(), filepath))) {
+    return false;
+  }
+
   return JSON.parse(fs.readFileSync(path.resolve(process.cwd(), filepath)));
 }
 
@@ -15,41 +19,29 @@ function uniqueAndFlattenAndSortKeys(objects) {
 }
 
 function searchDiff(keys, firstObject, secondObject) {
-  const result = [];
-
-  /* eslint-disable-next-line */
-  for (const key of keys) {
+  return keys.reduce((acc, key) => {
     if (Object.hasOwn(firstObject, key) && !Object.hasOwn(secondObject, key)) {
-      result.push(`- ${key}: ${firstObject[key]}`);
+      acc.push(`- ${key}: ${firstObject[key]}`);
     }
 
     if (!Object.hasOwn(firstObject, key) && Object.hasOwn(secondObject, key)) {
-      result.push(`+ ${key}: ${secondObject[key]}`);
+      acc.push(`+ ${key}: ${secondObject[key]}`);
     }
 
     if (Object.hasOwn(firstObject, key) && Object.hasOwn(secondObject, key)) {
       if (firstObject[key] === secondObject[key]) {
-        result.push(`  ${key}: ${firstObject[key]}`);
+        acc.push(`  ${key}: ${firstObject[key]}`);
       } else {
-        result.push(`- ${key}: ${firstObject[key]}`);
-        result.push(`+ ${key}: ${secondObject[key]}`);
+        acc.push(`- ${key}: ${firstObject[key]}`);
+        acc.push(`+ ${key}: ${secondObject[key]}`);
       }
     }
-  }
-
-  return result;
+    return acc;
+  }, []);
 }
 
-function stringBuilder(array) {
-  let resultString = '';
-
-  /* eslint-disable-next-line */
-  for (const item of array) {
-    resultString = `${resultString}  ${item}\n`;
-  }
-  resultString = `{\n${resultString}}`;
-
-  return resultString;
+function stringBuilder(collection) {
+  return `{\n${collection.reduce((acc, item) => `${acc}  ${item}\n`, '')}}`;
 }
 
 export {
