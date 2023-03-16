@@ -4,7 +4,7 @@ import _ from 'lodash';
 import parsers from './parsers.js';
 
 function transferPathToFileContent(filepath) {
-  const normalizePath = path.resolve(process.cwd(), filepath);
+  const normalizePath = filepath.includes('fixtures') ? filepath : path.resolve(process.cwd(), '__fixtures__', filepath);
   if (!fs.existsSync(normalizePath)) {
     return false;
   }
@@ -25,13 +25,9 @@ function searchDiff(keys, firstObject, secondObject) {
   return keys.reduce((acc, key) => {
     if (Object.hasOwn(firstObject, key) && !Object.hasOwn(secondObject, key)) {
       acc.push(`- ${key}: ${firstObject[key]}`);
-    }
-
-    if (!Object.hasOwn(firstObject, key) && Object.hasOwn(secondObject, key)) {
+    } else if (!Object.hasOwn(firstObject, key) && Object.hasOwn(secondObject, key)) {
       acc.push(`+ ${key}: ${secondObject[key]}`);
-    }
-
-    if (Object.hasOwn(firstObject, key) && Object.hasOwn(secondObject, key)) {
+    } else if (Object.hasOwn(firstObject, key) && Object.hasOwn(secondObject, key)) {
       if (firstObject[key] === secondObject[key]) {
         acc.push(`  ${key}: ${firstObject[key]}`);
       } else {
