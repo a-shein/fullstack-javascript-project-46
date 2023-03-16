@@ -22,6 +22,9 @@
   "homepage": "https://github.com/a-shein/fullstack-javascript-project-46#readme",
   "dependencies": {
     "commander": "^10.0.0",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
     "eslint": "^8.36.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",

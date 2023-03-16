@@ -1,12 +1,17 @@
 import fs from 'fs';
 import path from 'path';
+import parsers from './parsers.js';
 
-function transferPathToFile(filepath) {
-  if (!fs.existsSync(path.resolve(process.cwd(), filepath))) {
+function transferPathToFileContent(filepath) {
+  const normalizePath = path.resolve(process.cwd(), filepath);
+  if (!fs.existsSync(normalizePath)) {
     return false;
   }
 
-  return JSON.parse(fs.readFileSync(path.resolve(process.cwd(), filepath)));
+  const fileByteContent = fs.readFileSync(normalizePath);
+  const fileExtension = path.extname(normalizePath);
+
+  return parsers(fileByteContent, fileExtension);
 }
 
 function uniqueAndFlattenAndSortKeys(objects) {
@@ -45,5 +50,5 @@ function stringBuilder(collection) {
 }
 
 export {
-  stringBuilder, transferPathToFile, uniqueAndFlattenAndSortKeys, searchDiff,
+  stringBuilder, transferPathToFileContent, uniqueAndFlattenAndSortKeys, searchDiff,
 };

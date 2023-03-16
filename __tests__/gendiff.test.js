@@ -6,15 +6,19 @@ const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 const getFixturePath = (filepath) => path.join(dirname, '..', '__fixtures__', filepath);
 
-let filepath1;
-let filepath2;
+const filesForSuccessTests = [
+  ['file1.json', 'file2.json'],
+  ['file1.yml', 'file2.yml'],
+  ['file1.yaml', 'file2.yaml'],
+];
 
-beforeEach(() => {
-  filepath1 = 'file1.json';
-  filepath2 = 'file2.json';
-});
+const filesForWrongTests = [
+  ['file11.json', 'file2.json'],
+  ['file1.yml', 'file2.ymlito'],
+  ['file1.txt', 'file2.exe'],
+];
 
-test('Compare filepath1 with filepath2', () => {
+test.each(filesForSuccessTests)('Compare %s with %s', (filepath1, filepath2) => {
   const fixturePath1 = getFixturePath(filepath1);
   const fixturePath2 = getFixturePath(filepath2);
   const expected = '{\n'
@@ -29,11 +33,11 @@ test('Compare filepath1 with filepath2', () => {
   expect(genDiff(fixturePath1, fixturePath2)).toEqual(expected);
 });
 
-test('wrong filename', () => {
-  const fixturePath1 = getFixturePath(`${filepath1}1`);
+test.each(filesForWrongTests)('Wrong file extension or file path %s and %s', (filepath1, filepath2) => {
+  const fixturePath1 = getFixturePath(`${filepath1}`);
   const fixturePath2 = getFixturePath(filepath2);
 
   expect(genDiff(fixturePath1, fixturePath2)).toEqual(
-    `Possible you enter invalid filepath ${fixturePath1} or ${fixturePath2}`,
+    `Possible you enter invalid filepath ${fixturePath1} or ${fixturePath2}.\n Also supported file format are json, yml, yaml`,
   );
 });
