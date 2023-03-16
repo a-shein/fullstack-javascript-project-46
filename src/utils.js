@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import _ from 'lodash';
 import parsers from './parsers.js';
 
 function transferPathToFileContent(filepath) {
@@ -15,12 +16,9 @@ function transferPathToFileContent(filepath) {
 }
 
 function uniqueAndFlattenAndSortKeys(objects) {
-  const temp = objects.reduce((acc, object) => {
-    acc.push(Object.keys(object));
-    return acc;
-  }, []).flatMap((a) => a);
+  const [object1, object2] = objects;
 
-  return temp.filter((item, pos) => temp.indexOf(item) === pos).sort();
+  return _.union(Object.keys(object1), Object.keys(object2)).sort();
 }
 
 function searchDiff(keys, firstObject, secondObject) {
