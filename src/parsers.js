@@ -1,12 +1,12 @@
 import yaml from 'js-yaml';
 
-function fileParser(fileByteContent, fileExtension) {
+function fileParser(fileContent, fileExtension) {
   switch (fileExtension) {
     case '.json':
-      return JSON.parse(fileByteContent);
+      return JSON.parse(fileContent);
     case '.yml':
     case '.yaml':
-      return yaml.load(fileByteContent);
+      return yaml.load(fileContent);
     default:
       return false;
   }
