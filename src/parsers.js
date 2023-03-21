@@ -8,7 +8,7 @@ function fileParser(fileContent, fileExtension) {
     case '.yaml':
       return yaml.load(fileContent);
     default:
-      return false;
+      return `File extension ${fileExtension} is not supported`;
   }
 }
 export default fileParser;

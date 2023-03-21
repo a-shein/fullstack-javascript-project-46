@@ -1,16 +1,21 @@
 import { searchDiff, transferPathToFileContent } from './utils.js';
-import makeStylish from './formatter/stylish.js';
+import outputFormatter from './formatter/index.js';
 
-function genDiff(filepath1, filepath2) {
+function genDiff(filepath1, filepath2, format) {
   const firstObject = transferPathToFileContent(filepath1);
+
+  if (typeof firstObject === 'string') {
+    return firstObject;
+  }
+
   const secondObject = transferPathToFileContent(filepath2);
 
-  if (firstObject === false || secondObject === false) {
-    return `Possible you enter invalid filepath ${filepath1} or ${filepath2}.\nAlso supported file format are json, yml, yaml`;
+  if (typeof secondObject === 'string') {
+    return secondObject;
   }
 
   const diffs = searchDiff(firstObject, secondObject);
-  return makeStylish(diffs);
+  return outputFormatter(diffs, format);
 }
 
 export default genDiff;

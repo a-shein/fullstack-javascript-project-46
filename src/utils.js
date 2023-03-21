@@ -6,7 +6,7 @@ import parsers from './parsers.js';
 function transferPathToFileContent(filepath) {
   const normalizePath = filepath.includes('fixtures') ? filepath : path.resolve(process.cwd(), '__fixtures__', filepath);
   if (!fs.existsSync(normalizePath)) {
-    return false;
+    return `File does not exist at the specified path ${filepath}`;
   }
 
   const fileContent = fs.readFileSync(normalizePath, 'utf-8');
