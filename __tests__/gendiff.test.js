@@ -1,7 +1,7 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import genDiff from '../src/index.js';
-import {expectedJSON, expectedPlain, expectedStylish} from '../__fixtures__/expected.js';
+import { expectedJSON, expectedPlain, expectedStylish } from '../__fixtures__/expected.js';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -11,7 +11,7 @@ const casesForSuccessTests = [
   ['file1.json', 'file2.json'],
   ['file1.yml', 'file2.yml', 'stylish'],
   ['file1.yaml', 'file2.yaml', 'plain'],
-  ['file1.yaml', 'file2.yaml', 'json']
+  ['file1.yaml', 'file2.yaml', 'json'],
 ];
 
 test.each(casesForSuccessTests)('Compare %s with %s in format %s', (filepath1, filepath2, format = 'stylish') => {
