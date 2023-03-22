@@ -1,7 +1,7 @@
 import { searchDiff, transferPathToFileContent } from './utils.js';
 import outputFormatter from './formatter/index.js';
 
-function genDiff(filepath1, filepath2, format) {
+function genDiff(filepath1, filepath2, format = 'stylish') {
   const firstObject = transferPathToFileContent(filepath1);
 
   if (typeof firstObject === 'string') {
