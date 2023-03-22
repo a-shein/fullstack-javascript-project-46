@@ -1,7 +1,7 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import genDiff from '../src/index.js';
-import { expectedPlain, expectedStylish } from '../__fixtures__/expected.js';
+import {expectedJSON, expectedPlain, expectedStylish} from '../__fixtures__/expected.js';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -11,13 +11,23 @@ const casesForSuccessTests = [
   ['file1.json', 'file2.json'],
   ['file1.yml', 'file2.yml', 'stylish'],
   ['file1.yaml', 'file2.yaml', 'plain'],
+  ['file1.yaml', 'file2.yaml', 'json']
 ];
 
 test.each(casesForSuccessTests)('Compare %s with %s in format %s', (filepath1, filepath2, format = 'stylish') => {
   const fixturePath1 = getFixturePath(filepath1);
   const fixturePath2 = getFixturePath(filepath2);
+  let expected;
 
-  const expected = (format === '' || format === 'stylish') ? expectedStylish : expectedPlain;
+  if (format === 'stylish') {
+    expected = expectedStylish;
+  }
+  if (format === 'plain') {
+    expected = expectedPlain;
+  }
+  if (format === 'json') {
+    expected = expectedJSON;
+  }
 
   expect(genDiff(fixturePath1, fixturePath2, format)).toEqual(expected);
 });
