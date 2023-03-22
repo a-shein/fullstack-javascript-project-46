@@ -14,20 +14,16 @@ const casesForSuccessTests = [
   ['file1.yaml', 'file2.yaml', 'json'],
 ];
 
+const outputFormats = {
+  stylish: expectedStylish,
+  plain: expectedPlain,
+  json: expectedJSON,
+};
+
 test.each(casesForSuccessTests)('Compare %s with %s in format %s', (filepath1, filepath2, format = 'stylish') => {
   const fixturePath1 = getFixturePath(filepath1);
   const fixturePath2 = getFixturePath(filepath2);
-  let expected;
-
-  if (format === 'stylish') {
-    expected = expectedStylish;
-  }
-  if (format === 'plain') {
-    expected = expectedPlain;
-  }
-  if (format === 'json') {
-    expected = expectedJSON;
-  }
+  const expected = outputFormats[format];
 
   expect(genDiff(fixturePath1, fixturePath2, format)).toEqual(expected);
 });

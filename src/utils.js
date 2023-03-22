@@ -16,9 +16,10 @@ function transferPathToFileContent(filepath) {
 }
 
 function searchDiff(firstObject, secondObject) {
-  const keys = _.union(Object.keys(firstObject), Object.keys(secondObject)).sort();
+  const keys = _.union(Object.keys(firstObject), Object.keys(secondObject));
+  const sortKeys = keys.sort();
 
-  return keys.reduce((acc, key) => {
+  const diffs = sortKeys.reduce((acc, key) => {
     const valueByKey1 = firstObject[key];
     const valueByKey2 = secondObject[key];
 
@@ -44,6 +45,8 @@ function searchDiff(firstObject, secondObject) {
     acc.push({ name: key, value: valueByKey1, type: 'unchanged' });
     return acc;
   }, []);
+
+  return diffs;
 }
 
 export { transferPathToFileContent, searchDiff };
