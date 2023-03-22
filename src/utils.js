@@ -17,7 +17,7 @@ function transferPathToFileContent(filepath) {
 
 function searchDiff(firstObject, secondObject) {
   const keys = _.union(Object.keys(firstObject), Object.keys(secondObject));
-  const sortKeys = [...keys].sort();
+  const sortKeys = _.sortBy(keys);
 
   return sortKeys.map((key) => {
     const valueByKey1 = firstObject[key];
